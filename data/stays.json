@@ -2,36 +2,46 @@
   {
     "id": 1,
     "name": "Shey Bhumi Resort (Leh/Shey)",
-    "lat": null,
-    "lng": null,
-    "dates": "Aug 23 → Aug 24"
+    "lat": 34.0495911,
+    "lng": 77.6474232,
+    "check_in": "2025-08-23",
+    "check_out": "2025-08-24",
+    "key": "leh_shey"
   },
   {
     "id": 2,
     "name": "Ule Ethnic Resort (Uleytokpo)",
     "lat": 34.253874,
     "lng": 77.094413,
-    "dates": "Aug 24 → Aug 25"
+    "check_in": "2025-08-24",
+    "check_out": "2025-08-25",
+    "key": "ule"
   },
   {
     "id": 3,
     "name": "Organic Village Retreat (Nubra)",
-    "lat": null,
-    "lng": null,
-    "dates": "Aug 25 → Aug 26"
+    "lat": 34.5857161,
+    "lng": 77.4719082,
+    "check_in": "2025-08-25",
+    "check_out": "2025-08-26",
+    "key": "nubra"
   },
   {
     "id": 4,
     "name": "Misty Hills Cabins (Pangong)",
     "lat": 33.9077457,
     "lng": 78.4581539,
-    "dates": "Aug 26 → Aug 27"
+    "check_in": "2025-08-26",
+    "check_out": "2025-08-27",
+    "key": "pangong"
   },
   {
     "id": 5,
     "name": "The Indus River Camp (Chuchot)",
-    "lat": null,
-    "lng": null,
-    "dates": "Aug 27 → Aug 28"
+    "lat": 34.0868218,
+    "lng": 77.6024996,
+    "check_in": "2025-08-27",
+    "check_out": "2025-08-28",
+    "key": "leh_shey"
   }
 ]
