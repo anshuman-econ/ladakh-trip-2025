@@ -12,17 +12,17 @@ const state = {
   selected: 0,
   maps: { main: null },
   markers: [],
-  routeLine: null
+  routeLine: null,
+  dists: []     // distance from previous stop (km), index-aligned with stays
 };
 
 const fmtTime = (d) => new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' }).format(d);
 const shortName = (s) => s.replace(/\s*\(.*?\)\s*/g,'').trim();
 
-// Haversine (km)
 function haversine(lat1, lon1, lat2, lon2){
   const R=6371, toRad = x => x*Math.PI/180;
-  const dLat = toRad(lat2-lat1), dLon=toRad(lon2-lon1);
-  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  const dLat = toRad(lat2-lat1), dLon=toRad(lon2-lon2+lon2-lon1); // not used
+  const a = Math.sin((toRad(lat2-lat1))/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin((toRad(lon2-lon1))/2)**2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
@@ -35,6 +35,12 @@ async function loadAll(){
   state.stays = stays;
   state.pois = pois;
   state.images = images;
+
+  // precompute distances from previous stop
+  state.dists = new Array(stays.length).fill(null);
+  for(let i=1;i<stays.length;i++){
+    state.dists[i] = +haversine(stays[i-1].lat,stays[i-1].lng,stays[i].lat,stays[i].lng).toFixed(1);
+  }
 }
 
 function initMainMap(){
@@ -48,7 +54,6 @@ function initMainMap(){
   terrain.addTo(m);
   L.control.layers({ 'Terrain':terrain, 'Satellite':satellite, 'Light':light }).addTo(m);
 
-  // Markers + number badges + route
   const latlngs = [];
   state.stays.forEach((s,i)=>{
     const latlng = [s.lat, s.lng];
@@ -70,24 +75,10 @@ function initMainMap(){
   }
   m.fitBounds(L.latLngBounds(latlngs), { padding:[20,20] });
 
-  // chained distances, e.g. "1.A → 2.B: 55.7 km → 3.C: …"
-  const parts = [];
-  for(let i=0;i<state.stays.length-1;i++){
-    const A = state.stays[i], B = state.stays[i+1];
-    const d = haversine(A.lat,A.lng,B.lat,B.lng).toFixed(1);
-    if(i===0){
-      parts.push(`${i+1}.${shortName(A.name)} → ${i+2}.${shortName(B.name)}: ${d} km`);
-    }else{
-      parts.push(`→ ${i+2}.${shortName(B.name)}: ${d} km`);
-    }
-  }
-  document.getElementById('routeChain').textContent = parts.join(' ');
-
-  // route toggle
+  // route toggle (now forced visible with z-index CSS)
   document.getElementById('routeToggle').addEventListener('change', (e)=>{
     if(!state.routeLine) return;
-    const show = e.target.checked;
-    if(show){ state.routeLine.addTo(m); } else { m.removeLayer(state.routeLine); }
+    if(e.target.checked){ state.routeLine.addTo(m); } else { m.removeLayer(state.routeLine); }
   });
 }
 
@@ -99,7 +90,8 @@ function renderStayLinks(){
     a.href = '#';
     const inStr  = new Date(s.check_in).toLocaleDateString('en-GB', {month:'short', day:'2-digit'});
     const outStr = new Date(s.check_out).toLocaleDateString('en-GB', {month:'short', day:'2-digit'});
-    a.textContent = `${i+1}. ${s.name} (${inStr} → ${outStr})`;
+    const distStr = (i>0 && state.dists[i]!=null) ? ` (${state.dists[i]} km)` : '';
+    a.textContent = `${i+1}. ${s.name} (${inStr} → ${outStr})${distStr}`;
     a.className = 'stay-link' + (state.selected===i ? ' active':'');
     a.addEventListener('click', (e)=>{ e.preventDefault(); selectStay(i); });
     box.appendChild(a);
@@ -117,10 +109,9 @@ function selectStay(i){
   document.getElementById('exploreTitle').textContent = `Explore — ${s.name}`;
   document.getElementById('areaMeta').textContent = `${s.check_in} → ${s.check_out}`;
 
-  // POIs (hard-coded, open in Google Maps)
+  // POIs (link to Google Maps)
   const list = document.getElementById('poiList'); list.innerHTML='';
-  const pois = (state.pois[s.key] || []);
-  pois.forEach(p=>{
+  (state.pois[s.key] || []).forEach(p=>{
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.href = p.gmaps; a.target = '_blank'; a.rel='noopener'; a.textContent = p.name;
@@ -131,13 +122,12 @@ function selectStay(i){
   // Golden hour for check-in date
   const d = new Date(`${s.check_in}T12:00:00+05:30`);
   const t = SunCalc.getTimes(d, s.lat, s.lng);
-  const lines = [
+  document.getElementById('lightBox').innerHTML = [
     `Sunrise: ${fmtTime(t.sunrise)} · Golden (AM) ends: ${fmtTime(t.goldenHourEnd)}`,
     `Sunset: ${fmtTime(t.sunset)} · Golden (PM) starts: ${fmtTime(t.goldenHour)}`
-  ];
-  document.getElementById('lightBox').innerHTML = lines.join('<br>');
+  ].join('<br>');
 
-  // Gallery (from images.json) — shown in the full-width section
+  // Gallery
   const gal = document.getElementById('gallery'); gal.innerHTML='';
   (state.images[s.key] || []).forEach(img=>{
     const el = document.createElement('a');
@@ -150,14 +140,9 @@ function selectStay(i){
   });
 }
 
-async function boot(){
+(async function boot(){
   await loadAll();
   initMainMap();
   renderStayLinks();
   selectStay(0); // default
-}
-
-boot().catch(err=>{
-  console.error(err);
-  document.getElementById('routeChain').textContent = 'Error loading site data. Open console for details.';
-});
+})();
