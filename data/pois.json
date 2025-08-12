@@ -1,0 +1,84 @@
+{
+  "leh_shey": [
+    {
+      "name": "Thiksey Monastery",
+      "lat": 34.0556694,
+      "lng": 77.6665,
+      "gmaps": "https://maps.google.com/?q=Thiksey+Monastery"
+    },
+    {
+      "name": "Shey Palace & Monastery",
+      "lat": 34.07167,
+      "lng": 77.63278,
+      "gmaps": "https://maps.google.com/?q=Shey+Palace"
+    },
+    {
+      "name": "Stakna Monastery Viewpoint",
+      "lat": 34.005,
+      "lng": 77.68472,
+      "gmaps": "https://maps.google.com/?q=Stakna+Monastery"
+    },
+    {
+      "name": "Indus–Zanskar Confluence (Sangam)",
+      "gmaps": "https://maps.google.com/?q=Indus+Zanskar+Confluence"
+    },
+    {
+      "name": "Magnetic Hill (gravity hill)",
+      "gmaps": "https://maps.google.com/?q=Magnetic+Hill+Ladakh"
+    }
+  ],
+  "ule": [
+    {
+      "name": "Alchi Monastery",
+      "lat": 34.22028,
+      "lng": 77.16667,
+      "gmaps": "https://maps.google.com/?q=Alchi+Monastery"
+    },
+    {
+      "name": "Basgo Ruins",
+      "gmaps": "https://maps.google.com/?q=Basgo+Monastery"
+    },
+    {
+      "name": "Likir Monastery",
+      "lat": 34.2903203,
+      "lng": 77.2132106,
+      "gmaps": "https://maps.google.com/?q=Likir+Monastery"
+    },
+    {
+      "name": "Lamayuru 'Moonland'",
+      "lat": 34.28278,
+      "lng": 76.77444,
+      "gmaps": "https://maps.google.com/?q=Lamayuru+Monastery"
+    }
+  ],
+  "nubra": [
+    {
+      "name": "Hunder Sand Dunes",
+      "gmaps": "https://maps.google.com/?q=Hunder+Sand+Dunes"
+    },
+    {
+      "name": "Diskit Monastery & Maitreya Statue",
+      "lat": 34.541111,
+      "lng": 77.560278,
+      "gmaps": "https://maps.google.com/?q=Diskit+Monastery"
+    },
+    {
+      "name": "Panamik Hot Springs",
+      "lat": 34.65389,
+      "lng": 77.62778,
+      "gmaps": "https://maps.google.com/?q=Panamik+Hot+Springs"
+    }
+  ],
+  "pangong": [
+    {
+      "name": "Spangmik Lakefront",
+      "lat": 33.9159,
+      "lng": 78.4300,
+      "gmaps": "https://maps.google.com/?q=Spangmik"
+    },
+    {
+      "name": "Pangong Tso Viewpoints (south bank)",
+      "gmaps": "https://maps.google.com/?q=Pangong+Lake+Viewpoint"
+    }
+  ]
+}
