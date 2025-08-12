@@ -1,0 +1,58 @@
+{
+  "leh_shey": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Thiksey_monastery.jpg",
+      "title": "Thiksey Monastery",
+      "credit": "Ishana Verma / CC BY-SA 4.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Thiksey_monastery.jpg"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Shey_Monastery.jpg",
+      "title": "Shey Monastery Chortens",
+      "credit": "Atishayphotography / CC BY-SA 3.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Shey_Monastery.jpg"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Stakna_Monastery%2C_Ladakh_01.jpg",
+      "title": "Stakna over the Indus",
+      "credit": "Deepank Ranka / CC BY-SA 4.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Stakna_Monastery,_Ladakh_01.jpg"
+    }
+  ],
+  "ule": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/5/51/Alchi_Monastery_07.jpg",
+      "title": "Alchi Monastery – Manjushri",
+      "credit": "Bernard Gagnon / CC BY-SA",
+      "page": "https://commons.wikimedia.org/wiki/File:Alchi_Monastery_07.jpg"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/5/55/Basgo_Monastery%2C_Ladakh_02.jpg",
+      "title": "Basgo Monastery",
+      "credit": "Bernard Gagnon / CC BY-SA",
+      "page": "https://commons.wikimedia.org/wiki/File:Basgo_Monastery,_Ladakh_02.jpg"
+    }
+  ],
+  "nubra": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/9/94/Diskit_monastery.jpg",
+      "title": "Diskit Monastery",
+      "credit": "Traveller Natalia Kudashkina / CC BY-SA 4.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Diskit_monastery.jpg"
+    },
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/3/3a/A_Lady_in_White_Dress%2C_Hunder_Sand_Dunes%2C_Nubra_Valley%2C_Ladakh.jpg",
+      "title": "Hunder Sand Dunes",
+      "credit": "RPSkokie / CC BY-SA 4.0",
+      "page": "https://commons.wikimedia.org/wiki/File:A_Lady_in_White_Dress,_Hunder_Sand_Dunes,_Nubra_Valley,_Ladakh.jpg"
+    }
+  ],
+  "pangong": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Some_of_the_peaks_around_the_Pangong_Tso_at_Spangmik_%2810035133944%29.jpg",
+      "title": "Pangong Tso near Spangmik",
+      "credit": "Fulvio Spada / CC BY-SA 2.0",
+      "page": "https://commons.wikimedia.org/wiki/File:Some_of_the_peaks_around_the_Pangong_Tso_at_Spangmik_(10035133944).jpg"
+    }
+  ]
+}
