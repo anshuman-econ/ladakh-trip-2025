@@ -7,20 +7,36 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin="">
-  <!-- Styles -->
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <!-- Site CSS -->
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
   <header>
-    <h1>Ladakh Trip • 2025</h1>
+    <div class="row">
+      <h1>Ladakh Trip • 2025</h1>
+      <nav class="nav">
+        <a href="./">Home</a>
+        <a href="budget.html">Budget</a>
+        <a href="CREDITS.md">Credits</a>
+      </nav>
+    </div>
     <div id="routeChain" class="route-chain"></div>
   </header>
 
   <main class="grid">
     <section class="map-wrap">
       <div id="map" class="map"></div>
+
+      <!-- route toggle -->
+      <div class="map-controls">
+        <label class="toggle">
+          <input type="checkbox" id="routeToggle" checked>
+          Show route line
+        </label>
+      </div>
+
       <div class="layer-hint">Terrain • Satellite • Light maps available</div>
     </section>
 
@@ -31,34 +47,29 @@
       <div class="card" id="explore">
         <h3 id="exploreTitle">Explore</h3>
         <div id="areaMeta" class="meta"></div>
-        <div id="areaMap" class="submap"></div>
 
         <h4>Best natural beauty nearby</h4>
         <ul id="poiList" class="poi-list"></ul>
 
         <h4>Golden hour & light</h4>
         <div id="lightBox" class="light-box"></div>
-
-        <h4>Photo gallery</h4>
-        <div id="gallery" class="gallery"></div>
-      </div>
-
-      <div class="card">
-        <h2>Budget (read-only)</h2>
-        <div id="budgetTotals" class="meta"></div>
-        <table id="budgetTable" class="budget-table"></table>
       </div>
     </aside>
   </main>
 
+  <!-- Full-width gallery below map + list -->
+  <section id="gallerySection" class="card gallery-section">
+    <h2>Photos</h2>
+    <div id="gallery" class="gallery"></div>
+  </section>
+
   <footer>
-    <a href="CREDITS.md">Credits & Licenses</a>
+    <span>Terrain • Satellite • Light maps available</span>
   </footer>
 
   <!-- Scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="" crossorigin=""></script>
-  <!-- SunCalc for golden hour (can be vendored later if you want zero CDNs) -->
-  <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
-  <script src="assets/app.js"></script>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
+  <script defer src="assets/app.js"></script>
 </body>
 </html>
