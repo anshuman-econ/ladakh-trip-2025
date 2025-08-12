@@ -1,51 +1,39 @@
-const CSV_PATH = 'data/budget.csv';
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Budget • Ladakh Trip 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header>
+    <div class="row">
+      <h1>Budget</h1>
+      <nav class="nav">
+        <a href="./">Home</a>
+        <a href="budget.html" aria-current="page">Budget</a>
+        <a href="CREDITS.md">Credits</a>
+      </nav>
+    </div>
+  </header>
 
-// Minimal CSV parser (simple: no embedded commas/quotes)
-function parseCSV(text){
-  const rows = text.trim().split(/\r?\n/).map(r=>r.split(','));
-  const header = rows.shift().map(h=>h.trim());
-  return rows.map(r => Object.fromEntries(r.map((v,i)=>[header[i], v.trim()])));
-}
+  <main style="padding:16px;">
+    <section class="card" id="budgetPage">
+      <h2>Totals</h2>
+      <div id="budgetTotals" class="meta"></div>
+      <h2 style="margin-top:1rem;">Items</h2>
+      <table id="budgetTable" class="budget-table"></table>
+    </section>
+  </main>
 
-async function loadBudget(){
-  const txt = await fetch(CSV_PATH).then(r=>r.text());
-  return parseCSV(txt);
-}
+  <footer>
+    <span>Data source: data/budget.csv</span>
+  </footer>
 
-function renderBudget(rows){
-  // Totals by currency
-  const byCurrency = {};
-  rows.forEach(r=>{
-    const cur = r.currency || 'INR';
-    const val = parseFloat(r.amount) || 0;
-    byCurrency[cur] = (byCurrency[cur]||0) + val;
-  });
-  const totals = Object.entries(byCurrency)
-    .map(([c,v])=>`${c} ${v.toLocaleString('en-IN')}`)
-    .join('  •  ');
-  document.getElementById('budgetTotals').textContent = totals;
-
-  // Table
-  const tbl = document.getElementById('budgetTable');
-  tbl.innerHTML = '';
-  const thead = document.createElement('thead');
-  thead.innerHTML = `<tr><th>Date</th><th>Category</th><th>Description</th><th class="amt">Amount</th><th>Cur</th></tr>`;
-  tbl.appendChild(thead);
-  const tb = document.createElement('tbody');
-  rows.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.date||''}</td><td>${r.category||''}</td><td>${r.description||''}</td><td class="amt">${r.amount||''}</td><td>${r.currency||''}</td>`;
-    tb.appendChild(tr);
-  });
-  tbl.appendChild(tb);
-}
-
-(async function boot(){
-  try{
-    const rows = await loadBudget();
-    renderBudget(rows);
-  }catch(err){
-    console.error(err);
-    document.getElementById('budgetTotals').textContent = 'Failed to load data/budget.csv';
-  }
-})();
+  <!-- IMPORTANT: do not paste JS here; just link to the file -->
+  <script defer src="assets/budget.js"></script>
+</body>
+</html>
