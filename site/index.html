@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ladakh Trip • 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="" crossorigin="">
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Ladakh Trip • 2025</h1>
+    <div id="routeChain" class="route-chain"></div>
+  </header>
+
+  <main class="grid">
+    <section class="map-wrap">
+      <div id="map" class="map"></div>
+      <div class="layer-hint">Terrain • Satellite • Light maps available</div>
+    </section>
+
+    <aside class="panel">
+      <h2>Stays</h2>
+      <div id="stayList" class="stay-list"></div>
+
+      <div class="card" id="explore">
+        <h3 id="exploreTitle">Explore</h3>
+        <div id="areaMeta" class="meta"></div>
+        <div id="areaMap" class="submap"></div>
+
+        <h4>Best natural beauty nearby</h4>
+        <ul id="poiList" class="poi-list"></ul>
+
+        <h4>Golden hour & light</h4>
+        <div id="lightBox" class="light-box"></div>
+
+        <h4>Photo gallery</h4>
+        <div id="gallery" class="gallery"></div>
+      </div>
+
+      <div class="card">
+        <h2>Budget (read-only)</h2>
+        <div id="budgetTotals" class="meta"></div>
+        <table id="budgetTable" class="budget-table"></table>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <a href="CREDITS.md">Credits & Licenses</a>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="" crossorigin=""></script>
+  <!-- SunCalc for golden hour (can be vendored later if you want zero CDNs) -->
+  <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
