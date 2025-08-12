@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "Shey Bhumi Resort (Leh/Shey)",
+    "lat": null,
+    "lng": null,
+    "dates": "Aug 23 → Aug 24"
+  },
+  {
+    "id": 2,
+    "name": "Ule Ethnic Resort (Uleytokpo)",
+    "lat": 34.253874,
+    "lng": 77.094413,
+    "dates": "Aug 24 → Aug 25"
+  },
+  {
+    "id": 3,
+    "name": "Organic Village Retreat (Nubra)",
+    "lat": null,
+    "lng": null,
+    "dates": "Aug 25 → Aug 26"
+  },
+  {
+    "id": 4,
+    "name": "Misty Hills Cabins (Pangong)",
+    "lat": 33.9077457,
+    "lng": 78.4581539,
+    "dates": "Aug 26 → Aug 27"
+  },
+  {
+    "id": 5,
+    "name": "The Indus River Camp (Chuchot)",
+    "lat": null,
+    "lng": null,
+    "dates": "Aug 27 → Aug 28"
+  }
+]
