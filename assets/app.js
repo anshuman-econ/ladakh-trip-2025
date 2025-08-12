@@ -1,18 +1,18 @@
-// --- Config (no APIs) ---
+// --- Static site config (no APIs) ---
 const files = {
   stays:  'data/stays.json',
   pois:   'data/pois.json',
-  images: 'data/images.json',
-  budget: 'data/budget.csv'
+  images: 'data/images.json'
 };
 
 const state = {
   stays: [],
-  pois: {},         // keyed by stay.key
-  images: {},       // keyed by stay.key
-  selected: null,
-  maps: { main: null, area: null },
-  markers: []
+  pois: {},     // key -> [{name,lat,lng,gmaps}]
+  images: {},   // key -> [{src,title,credit,page}]
+  selected: 0,
+  maps: { main: null },
+  markers: [],
+  routeLine: null
 };
 
 const fmtTime = (d) => new Intl.DateTimeFormat('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata' }).format(d);
@@ -26,24 +26,15 @@ function haversine(lat1, lon1, lat2, lon2){
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-// Minimal CSV parser (no embedded commas/quotes)
-function parseCSV(text){
-  const rows = text.trim().split(/\r?\n/).map(r=>r.split(','));
-  const header = rows.shift().map(h=>h.trim());
-  return rows.map(r => Object.fromEntries(r.map((v,i)=>[header[i], v.trim()])));
-}
-
 async function loadAll(){
-  const [stays, pois, images, budgetTxt] = await Promise.all([
+  const [stays, pois, images] = await Promise.all([
     fetch(files.stays).then(r=>r.json()),
     fetch(files.pois).then(r=>r.json()),
-    fetch(files.images).then(r=>r.json()),
-    fetch(files.budget).then(r=>r.text()).catch(_=>'')
+    fetch(files.images).then(r=>r.json())
   ]);
   state.stays = stays;
   state.pois = pois;
   state.images = images;
-  state.budget = budgetTxt ? parseCSV(budgetTxt) : [];
 }
 
 function initMainMap(){
@@ -57,30 +48,29 @@ function initMainMap(){
   terrain.addTo(m);
   L.control.layers({ 'Terrain':terrain, 'Satellite':satellite, 'Light':light }).addTo(m);
 
-  // Markers & route
+  // Markers + number badges + route
   const latlngs = [];
   state.stays.forEach((s,i)=>{
     const latlng = [s.lat, s.lng];
     latlngs.push(latlng);
 
-    // main marker
     const marker = L.marker(latlng).addTo(m).bindPopup(
       `<b>${i+1}. ${s.name}</b><br>${s.check_in} → ${s.check_out}`
     ).on('click', ()=>selectStay(i));
     state.markers.push(marker);
 
-    // number badge as label
-    const badge = L.marker(latlng, {
+    L.marker(latlng, {
       interactive:false,
       icon: L.divIcon({ className:'ordlbl', html: `${i+1}`, iconSize:[24,24], iconAnchor:[12,30] })
     }).addTo(m);
   });
 
-  // route line
-  if(latlngs.length>1) L.polyline(latlngs, { color:'#6bb6ff', weight:3, opacity:0.9 }).addTo(m);
+  if(latlngs.length>1){
+    state.routeLine = L.polyline(latlngs, { color:'#6bb6ff', weight:3, opacity:0.9 }).addTo(m);
+  }
   m.fitBounds(L.latLngBounds(latlngs), { padding:[20,20] });
 
-  // chained distances
+  // chained distances, e.g. "1.A → 2.B: 55.7 km → 3.C: …"
   const parts = [];
   for(let i=0;i<state.stays.length-1;i++){
     const A = state.stays[i], B = state.stays[i+1];
@@ -92,6 +82,13 @@ function initMainMap(){
     }
   }
   document.getElementById('routeChain').textContent = parts.join(' ');
+
+  // route toggle
+  document.getElementById('routeToggle').addEventListener('change', (e)=>{
+    if(!state.routeLine) return;
+    const show = e.target.checked;
+    if(show){ state.routeLine.addTo(m); } else { m.removeLayer(state.routeLine); }
+  });
 }
 
 function renderStayLinks(){
@@ -100,37 +97,27 @@ function renderStayLinks(){
   state.stays.forEach((s,i)=>{
     const a = document.createElement('a');
     a.href = '#';
-    a.textContent = `${i+1}. ${s.name} (${new Date(s.check_in).toLocaleDateString('en-GB', {month:'short', day:'2-digit'})} → ${new Date(s.check_out).toLocaleDateString('en-GB', {month:'short', day:'2-digit'})})`;
+    const inStr  = new Date(s.check_in).toLocaleDateString('en-GB', {month:'short', day:'2-digit'});
+    const outStr = new Date(s.check_out).toLocaleDateString('en-GB', {month:'short', day:'2-digit'});
+    a.textContent = `${i+1}. ${s.name} (${inStr} → ${outStr})`;
     a.className = 'stay-link' + (state.selected===i ? ' active':'');
     a.addEventListener('click', (e)=>{ e.preventDefault(); selectStay(i); });
     box.appendChild(a);
   });
 }
 
-function initAreaMap(){
-  state.maps.area = L.map('areaMap', { zoomControl:true });
-  const terrain   = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution:'&copy; OpenTopoMap, OSM' });
-  const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution:'&copy; Esri' });
-  const light     = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution:'&copy; OSM' });
-  terrain.addTo(state.maps.area);
-  L.control.layers({ 'Terrain':terrain, 'Satellite':satellite, 'Light':light }).addTo(state.maps.area);
-}
-
 function selectStay(i){
   state.selected = i;
   renderStayLinks();
+
   const s = state.stays[i];
-  // pan main map
   state.maps.main.panTo([s.lat,s.lng]);
 
-  // update Explore
+  // Explore meta
   document.getElementById('exploreTitle').textContent = `Explore — ${s.name}`;
   document.getElementById('areaMeta').textContent = `${s.check_in} → ${s.check_out}`;
-  const am = state.maps.area;
-  am.setView([s.lat,s.lng], 11);
-  L.marker([s.lat,s.lng]).addTo(am).bindPopup(s.name).openPopup();
 
-  // POIs (hardcoded, link to Google Maps)
+  // POIs (hard-coded, open in Google Maps)
   const list = document.getElementById('poiList'); list.innerHTML='';
   const pois = (state.pois[s.key] || []);
   pois.forEach(p=>{
@@ -141,7 +128,7 @@ function selectStay(i){
     list.appendChild(li);
   });
 
-  // Golden / blue hour for check-in date
+  // Golden hour for check-in date
   const d = new Date(`${s.check_in}T12:00:00+05:30`);
   const t = SunCalc.getTimes(d, s.lat, s.lng);
   const lines = [
@@ -150,7 +137,7 @@ function selectStay(i){
   ];
   document.getElementById('lightBox').innerHTML = lines.join('<br>');
 
-  // Gallery (embedded URLs from images.json)
+  // Gallery (from images.json) — shown in the full-width section
   const gal = document.getElementById('gallery'); gal.innerHTML='';
   (state.images[s.key] || []).forEach(img=>{
     const el = document.createElement('a');
@@ -163,38 +150,11 @@ function selectStay(i){
   });
 }
 
-function renderBudget(){
-  const rows = state.budget || [];
-  const byCurrency = {};
-  rows.forEach(r=>{
-    const cur = r.currency || 'INR';
-    byCurrency[cur] = (byCurrency[cur]||0) + (parseFloat(r.amount)||0);
-  });
-  const totals = Object.entries(byCurrency).map(([c,v])=>`${c} ${v.toLocaleString('en-IN')}`).join('  •  ');
-  document.getElementById('budgetTotals').textContent = `Total: ${totals}`;
-
-  const tbl = document.getElementById('budgetTable');
-  tbl.innerHTML = '';
-  const thead = document.createElement('thead');
-  thead.innerHTML = `<tr><th>Date</th><th>Category</th><th>Description</th><th class="amt">Amount</th><th>Cur</th></tr>`;
-  tbl.appendChild(thead);
-  const tb = document.createElement('tbody');
-  rows.forEach(r=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.date||''}</td><td>${r.category||''}</td><td>${r.description||''}</td><td class="amt">${r.amount||''}</td><td>${r.currency||''}</td>`;
-    tb.appendChild(tr);
-  });
-  tbl.appendChild(tb);
-}
-
 async function boot(){
   await loadAll();
   initMainMap();
-  initAreaMap();
   renderStayLinks();
-  renderBudget();
-  // select first stay by default
-  selectStay(0);
+  selectStay(0); // default
 }
 
 boot().catch(err=>{
