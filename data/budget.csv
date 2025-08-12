@@ -1,0 +1,8 @@
+date,category,description,amount,currency,who,notes
+2025-08-23,Hotel,Shey Bhumi Resort (1N),6500,INR,Anshuman,CP plan
+2025-08-24,Hotel,Ule Ethnic Resort (1N),8500,INR,Anshuman,MAP
+2025-08-25,Hotel,Organic Village Retreat (1N),7000,INR,Anshuman,CP
+2025-08-26,Hotel,Misty Hills Cabins (1N),10000,INR,Anshuman,EP
+2025-08-27,Hotel,The Indus River Camp (1N),12000,INR,Anshuman,MAP
+2025-08-23,Flight,DEL → IXL,18000,INR,Anshuman,IndiGo
+2025-08-28,Flight,IXL → DEL,16000,INR,Anshuman,Air India
