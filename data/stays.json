@@ -1,9 +1,9 @@
 [
   {
     "id": 1,
-    "name": "Shey Bhumi Resort (Leh/Shey)",
-    "lat": 34.0495911,
-    "lng": 77.6474232,
+    "name": "Lotus hotel",
+    "lat": 34.169474,
+    "lng": 77.583629,
     "check_in": "2025-08-23",
     "check_out": "2025-08-24",
     "key": "leh_shey"
